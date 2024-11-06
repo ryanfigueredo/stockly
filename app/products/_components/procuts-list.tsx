@@ -1,6 +1,7 @@
+import { cachedGetProducts } from "@/app/_data-acess/product/get-products";
+
 const ProductList = async () => {
-  const response = await fetch("http://localhost:3000/api/products");
-  const products = await response.json();
+  const products = await cachedGetProducts();
   return (
     <ul>
       {products.map((product) => (

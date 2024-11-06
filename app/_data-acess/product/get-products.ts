@@ -2,12 +2,11 @@ import "server-only";
 
 import { db } from "@/app/_lib/prisma";
 import { Product } from "@prisma/client";
-import { unstable_cache } from "next/cache";
+import { cache } from "react";
 
 export const getProducts = async (): Promise<Product[]> => {
+  console.log("Fetching products from cache");
   return db.product.findMany({});
 };
 
-export const cachedGetProducts = unstable_cache(getProducts, ["get-products"], {
-  revalidate: 5,
-});
+export const cachedGetProducts = cache(getProducts);
