@@ -1,14 +1,10 @@
 import { DataTable } from "../_components/ui/data-table";
 import { productTableColumns } from "./_components/table-columns";
-import {
-  cachedGetProducts,
-  cachedGetRandomNumber,
-} from "../_data-acess/product/get-products";
+import { cachedGetProducts } from "../_data-acess/product/get-products";
 import AddProductButton from "./_components/add-product-button";
 
 const ProductsPage = async () => {
   const products = await cachedGetProducts();
-  const randomNumber = await cachedGetRandomNumber();
   return (
     <div className="m-8 w-full space-y-8 rounded-lg bg-white p-8">
       <div className="flex w-full items-center justify-between">
@@ -19,7 +15,6 @@ const ProductsPage = async () => {
           <h2 className="text-ls font-semibold">Produtos</h2>
         </div>
         <AddProductButton />
-        {randomNumber}
       </div>
       <DataTable columns={productTableColumns} data={products} />
     </div>
