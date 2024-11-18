@@ -1,3 +1,4 @@
+import { FormProvider } from "react-hook-form";
 import { Button } from "../_components/ui/button";
 import { ComboboxOption } from "../_components/ui/combobox";
 import { Sheet, SheetTrigger } from "../_components/ui/sheet";
@@ -23,7 +24,10 @@ const SalesPage = async () => {
           <SheetTrigger asChild>
             <Button>Nova Venda</Button>
           </SheetTrigger>
-          <UpsertSheetContent productOptions={productOptions} />
+          <UpsertSheetContent
+            products={products}
+            productOptions={productOptions}
+          />
         </Sheet>
       </div>
     </div>
