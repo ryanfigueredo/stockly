@@ -3,6 +3,7 @@
 import { Button } from "@/app/_components/ui/button";
 import { Combobox, ComboboxOption } from "@/app/_components/ui/combobox";
 import {
+  Form,
   FormControl,
   FormField,
   FormItem,
@@ -26,12 +27,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/app/_components/ui/table";
-import { formatCurrency } from "@/app/_helper/currency";
+import { formatCurrency } from "@/app/_helpers/currency";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Product } from "@prisma/client";
 import { PlusIcon } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import SalesTableDropdownMenu from "./table-dropdown-menu";
 
@@ -70,8 +71,7 @@ const UpsertSheetContent = ({
       quantity: 1,
     },
   });
-
-  const onSubmit = async (data: FormSchema) => {
+  const onSubmit = (data: FormSchema) => {
     const selectedProduct = products.find(
       (product) => product.id === data.productId,
     );
@@ -81,6 +81,15 @@ const UpsertSheetContent = ({
         (product) => product.id === selectedProduct.id,
       );
       if (existingProduct) {
+        const productIsOutOfStock =
+          existingProduct.quantity + data.quantity > selectedProduct.stock;
+        if (productIsOutOfStock) {
+          form.setError("quantity", {
+            message: "Quantidade indisponível em estoque.",
+          });
+          return currentProducts;
+        }
+        form.reset();
         return currentProducts.map((product) => {
           if (product.id === selectedProduct.id) {
             return {
@@ -91,6 +100,14 @@ const UpsertSheetContent = ({
           return product;
         });
       }
+      const productIsOutOfStock = data.quantity > selectedProduct.stock;
+      if (productIsOutOfStock) {
+        form.setError("quantity", {
+          message: "Quantidade indisponível em estoque.",
+        });
+        return currentProducts;
+      }
+      form.reset();
       return [
         ...currentProducts,
         {
@@ -100,7 +117,6 @@ const UpsertSheetContent = ({
         },
       ];
     });
-    form.reset();
   };
   const productsTotal = useMemo(() => {
     return selectedProducts.reduce((acc, product) => {
@@ -147,7 +163,7 @@ const UpsertSheetContent = ({
             name="quantity"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Produto</FormLabel>
+                <FormLabel>Quantidade</FormLabel>
                 <FormControl>
                   <Input
                     type="number"
@@ -166,17 +182,16 @@ const UpsertSheetContent = ({
           </Button>
         </form>
       </Form>
-      {selectedProducts.map((product) => (
-        <p key={product.id}>{product.name}</p>
-      ))}
+
       <Table>
-        <TableCaption>Lista dos produtos adicionados à venda</TableCaption>
+        <TableCaption>Lista dos produtos adicionados à venda.</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Produto</TableHead>
             <TableHead>Preço Unitário</TableHead>
             <TableHead>Quantidade</TableHead>
             <TableHead>Total</TableHead>
+            <TableHead>Ações</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -184,7 +199,6 @@ const UpsertSheetContent = ({
             <TableRow key={product.id}>
               <TableCell>{product.name}</TableCell>
               <TableCell>{formatCurrency(product.price)}</TableCell>
-
               <TableCell>{product.quantity}</TableCell>
               <TableCell>
                 {formatCurrency(product.price * product.quantity)}
