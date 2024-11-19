@@ -38,6 +38,7 @@ import { z } from "zod";
 import SalesTableDropdownMenu from "./table-dropdown-menu";
 import { createSale } from "@/app/_actions/sale/create-sale";
 import { toast } from "sonner";
+import { ProductIsOutOfStock } from "@/app/_actions/sale/create-sale/schema";
 
 const formSchema = z.object({
   productId: z.string().uuid({
@@ -86,14 +87,14 @@ const UpsertSheetContent = ({
         (product) => product.id === selectedProduct.id,
       );
       if (existingProduct) {
-        const productIsOutOfStock =
-          existingProduct.quantity + data.quantity > selectedProduct.stock;
-        if (productIsOutOfStock) {
-          form.setError("quantity", {
-            message: "Quantidade indisponível em estoque.",
-          });
-          return currentProducts;
-        }
+        // const productIsOutOfStock =
+        //   existingProduct.quantity + data.quantity > selectedProduct.stock;
+        // if (productIsOutOfStock) {
+        //   form.setError("quantity", {
+        //     message: "Quantidade indisponível em estoque.",
+        //   });
+        //   return currentProducts;
+        // }
         form.reset();
         return currentProducts.map((product) => {
           if (product.id === selectedProduct.id) {
@@ -105,13 +106,13 @@ const UpsertSheetContent = ({
           return product;
         });
       }
-      const productIsOutOfStock = data.quantity > selectedProduct.stock;
-      if (productIsOutOfStock) {
-        form.setError("quantity", {
-          message: "Quantidade indisponível em estoque.",
-        });
-        return currentProducts;
-      }
+      // const productIsOutOfStock = data.quantity > selectedProduct.stock;
+      // if (productIsOutOfStock) {
+      //   form.setError("quantity", {
+      //     message: "Quantidade indisponível em estoque.",
+      //   });
+      //   return currentProducts;
+      // }
       form.reset();
       return [
         ...currentProducts,
@@ -136,15 +137,21 @@ const UpsertSheetContent = ({
   };
   const onSubmitSale = async () => {
     try {
-      await createSale({
+      const response = await createSale({
         products: selectedProducts.map((product) => ({
           id: product.id,
           quantity: product.quantity,
         })),
       });
+      if (response.error) {
+        return toast.error(response.error);
+      }
       toast.success("Venda realizada com sucesso!");
       setSheetIsOpen(false);
     } catch (error) {
+      if (error instanceof ProductIsOutOfStock) {
+        return toast.error(error.message);
+      }
       toast.error("Erro ao realizar a venda.");
     }
   };

@@ -1,11 +1,27 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { db } from "@/app/_lib/prisma";
-import { createSaleSchema, CreateSaleSchema } from "./schema";
+import {
+  createSaleSchema,
+  CreateSaleSchema,
+  ProductIsOutOfStock,
+} from "./schema";
 import { revalidatePath } from "next/cache";
 
-export const createSale = async (data: CreateSaleSchema) => {
+interface CreateSaleResponse {
+  data?: any;
+  error?: any;
+}
+
+export const createSale = async (
+  data: CreateSaleSchema,
+): Promise<CreateSaleResponse> => {
   createSaleSchema.parse(data);
+  const response: CreateSaleResponse = {
+    error: null,
+    data: null,
+  };
   await db.$transaction(async (trx) => {
     const sale = await trx.sale.create({
       data: {
@@ -19,11 +35,11 @@ export const createSale = async (data: CreateSaleSchema) => {
         },
       });
       if (!productFromDb) {
-        throw new Error("Product not found");
+        return (response.error = "Product not found");
       }
       const productIsOutOfStock = product.quantity > productFromDb.stock;
       if (productIsOutOfStock) {
-        throw new Error("Product out of stock");
+        return (response.error = new ProductIsOutOfStock().message);
       }
       await trx.saleProduct.create({
         data: {
@@ -44,7 +60,9 @@ export const createSale = async (data: CreateSaleSchema) => {
         },
       });
     }
+    response.data = sale;
   });
 
   revalidatePath("/products");
+  return response;
 };
