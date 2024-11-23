@@ -2,7 +2,7 @@ import { ComboboxOption } from "../_components/ui/combobox";
 import { DataTable } from "../_components/ui/data-table";
 import { getProducts } from "../_data-acess/product/get-products";
 import { getSales } from "../_data-acess/sale/get-sales";
-import CreateSaleButton from "./_components/create-sale-button";
+import UpsertSaleButton from "./_components/create-sale-button";
 import { saleTableColumns } from "./_components/table-columns";
 
 const SalesPage = async () => {
@@ -26,7 +26,7 @@ const SalesPage = async () => {
           </span>
           <h2 className="text-xl font-semibold">Vendas</h2>
         </div>
-        <CreateSaleButton products={products} productOptions={productOptions} />
+        <UpsertSaleButton products={products} productOptions={productOptions} />
       </div>
       <DataTable columns={saleTableColumns} data={tableData} />
     </div>

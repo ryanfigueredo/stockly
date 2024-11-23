@@ -35,7 +35,7 @@ import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import UpsertSaleTableDropdownMenu from "./upsert-table-dropdown-menu";
-import { createSale } from "@/app/_actions/sale/create-sale";
+import { upsertSale } from "@/app/_actions/sale/upsert-sale";
 import { toast } from "sonner";
 import { useAction } from "next-safe-action/hooks";
 import { flattenValidationErrors } from "next-safe-action";
@@ -58,6 +58,7 @@ interface SelectedProduct {
 }
 
 interface UpsertSheetContentProps {
+  saleId?: string;
   products: ProductDto[];
   productOptions: ComboboxOption[];
   setSheetIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -65,6 +66,7 @@ interface UpsertSheetContentProps {
 }
 
 const UpsertSheetContent = ({
+  saleId,
   products,
   productOptions,
   setSheetIsOpen,
@@ -73,7 +75,7 @@ const UpsertSheetContent = ({
   const [selectedProducts, setSelectedProducts] = useState<SelectedProduct[]>(
     defaultSelectedProducts ?? [],
   );
-  const { execute: executeCreateSale } = useAction(createSale, {
+  const { execute: executeUpsertSale } = useAction(upsertSale, {
     onError: ({ error: { validationErrors, serverError } }) => {
       const flattenedErrors = flattenValidationErrors(validationErrors);
       toast.error(serverError ?? flattenedErrors.formErrors[0]);
@@ -150,7 +152,8 @@ const UpsertSheetContent = ({
     });
   };
   const onSubmitSale = async () => {
-    executeCreateSale({
+    executeUpsertSale({
+      id: saleId,
       products: selectedProducts.map((product) => ({
         id: product.id,
         quantity: product.quantity,
