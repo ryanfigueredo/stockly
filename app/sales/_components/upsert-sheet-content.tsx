@@ -30,7 +30,6 @@ import {
 } from "@/app/_components/ui/table";
 import { formatCurrency } from "../../_helper/currency";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Product } from "@prisma/client";
 import { CheckIcon, PlusIcon } from "lucide-react";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -40,6 +39,7 @@ import { createSale } from "@/app/_actions/sale/create-sale";
 import { toast } from "sonner";
 import { useAction } from "next-safe-action/hooks";
 import { flattenValidationErrors } from "next-safe-action";
+import { ProductDto } from "@/app/_data-acess/product/get-products";
 
 const formSchema = z.object({
   productId: z.string().uuid({
@@ -50,12 +50,6 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>;
 
-interface UpsertSheetContentProps {
-  products: Product[];
-  productOptions: ComboboxOption[];
-  setSheetIsOpen: Dispatch<SetStateAction<boolean>>;
-}
-
 interface SelectedProduct {
   id: string;
   name: string;
@@ -63,13 +57,21 @@ interface SelectedProduct {
   quantity: number;
 }
 
+interface UpsertSheetContentProps {
+  products: ProductDto[];
+  productOptions: ComboboxOption[];
+  setSheetIsOpen: Dispatch<SetStateAction<boolean>>;
+  defaultSelectedProducts?: SelectedProduct[];
+}
+
 const UpsertSheetContent = ({
   products,
   productOptions,
   setSheetIsOpen,
+  defaultSelectedProducts,
 }: UpsertSheetContentProps) => {
   const [selectedProducts, setSelectedProducts] = useState<SelectedProduct[]>(
-    [],
+    defaultSelectedProducts ?? [],
   );
   const { execute: executeCreateSale } = useAction(createSale, {
     onError: ({ error: { validationErrors, serverError } }) => {
