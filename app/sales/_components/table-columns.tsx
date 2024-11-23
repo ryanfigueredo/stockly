@@ -8,7 +8,7 @@ import { MoreHorizontalIcon } from "lucide-react";
 
 export const saleTableColumns: ColumnDef<SaleDto>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "productNames",
     header: "Produtos",
   },
   {
@@ -16,7 +16,6 @@ export const saleTableColumns: ColumnDef<SaleDto>[] = [
     header: "Quantidade de Produtos",
   },
   {
-    accessorKey: "totalAmount",
     header: "Valor total",
     cell: ({
       row: {
