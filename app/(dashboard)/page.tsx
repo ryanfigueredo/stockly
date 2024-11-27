@@ -92,7 +92,7 @@ const Home = async () => {
             Produtos mais vendidos
           </p>
 
-          <div className="mt-6 space-y-7 overflow-y-auto px-6 pb-6">
+          <div className="space-y-7 overflow-y-auto px-6 pb-6">
             {mostSoldProducts.map((product) => (
               <MostSoldProductsItem key={product.productId} product={product} />
             ))}
