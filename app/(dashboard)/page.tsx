@@ -1,38 +1,22 @@
-import {
-  CircleDollarSign,
-  DollarSign,
-  PackageIcon,
-  ShoppingBasketIcon,
-} from "lucide-react";
 import Header, {
   HeaderLeft,
   HeaderSubtitle,
   HeaderTitle,
 } from "../_components/header";
-import {
-  SummaryCard,
-  SummaryCardIcon,
-  SummaryCardTitle,
-  SummaryCardValue,
-} from "./_components/summary-card";
-import { getDashboard } from "../_data-acess/dashboard/get-dashboard";
-import { formatCurrency } from "../_helper/currency";
+import { SummaryCardSkeleton } from "./_components/summary-card";
+
 import RevenueChart from "./_components/revenue-chart";
-import MostSoldProductsItem from "./_components/most-sold-product-item";
+import MostSoldProductItem from "./_components/most-sold-product-item";
 import TotalRevenueCard from "./_components/total-revenue-card";
 import { Suspense } from "react";
-import { Skeleton } from "../_components/ui/skeleton";
+import TodayRevenueCard from "./_components/today-revenue-card";
+import { getDashboard } from "../_data-acess/dashboard/get-dashboard";
+import TotalSalesCard from "./_components/total-sales-card";
+import TotalProductsCard from "./_components/total-products-card";
+import TotalStockCard from "./_components/total-stock-card";
 
 const Home = async () => {
-  const {
-    totalRevenue,
-    todayRevenue,
-    totalSales,
-    totalStock,
-    totalProducts,
-    totalLast14DaysRevenue,
-    mostSoldProducts,
-  } = await getDashboard();
+  const { totalLast14DaysRevenue, mostSoldProducts } = await getDashboard();
   return (
     <div className="m-8 flex w-full flex-col space-y-8 rounded-lg">
       <Header>
@@ -43,40 +27,25 @@ const Home = async () => {
       </Header>
 
       <div className="grid grid-cols-2 gap-6">
-        <Suspense fallback={<Skeleton className="w-full bg-white" />}>
+        <Suspense fallback={<SummaryCardSkeleton />}>
           <TotalRevenueCard />
         </Suspense>
-
-        <SummaryCard>
-          <SummaryCardIcon>
-            <DollarSign />
-          </SummaryCardIcon>
-          <SummaryCardTitle>Receita Hoje</SummaryCardTitle>
-          <SummaryCardValue>{formatCurrency(todayRevenue)}</SummaryCardValue>
-        </SummaryCard>
+        <Suspense fallback={<SummaryCardSkeleton />}>
+          <TodayRevenueCard />
+        </Suspense>
       </div>
       <div className="grid grid-cols-3 gap-6">
-        <SummaryCard>
-          <SummaryCardIcon>
-            <CircleDollarSign />
-          </SummaryCardIcon>
-          <SummaryCardTitle>Vendas Totais</SummaryCardTitle>
-          <SummaryCardValue>{totalSales}</SummaryCardValue>
-        </SummaryCard>
-        <SummaryCard>
-          <SummaryCardIcon>
-            <PackageIcon />
-          </SummaryCardIcon>
-          <SummaryCardTitle>Total em Estoque</SummaryCardTitle>
-          <SummaryCardValue>{totalStock}</SummaryCardValue>
-        </SummaryCard>
-        <SummaryCard>
-          <SummaryCardIcon>
-            <ShoppingBasketIcon />
-          </SummaryCardIcon>
-          <SummaryCardTitle>Produtos</SummaryCardTitle>
-          <SummaryCardValue>{totalProducts}</SummaryCardValue>
-        </SummaryCard>
+        <Suspense fallback={<SummaryCardSkeleton />}>
+          <TotalSalesCard />
+        </Suspense>
+
+        <Suspense fallback={<SummaryCardSkeleton />}>
+          <TotalProductsCard />
+        </Suspense>
+
+        <Suspense fallback={<SummaryCardSkeleton />}>
+          <TotalStockCard />
+        </Suspense>
       </div>
 
       <div className="grid min-h-0 grid-cols-[minmax(0,2.5fr),minmax(0,1fr)] gap-6">
@@ -93,7 +62,7 @@ const Home = async () => {
 
           <div className="space-y-7 overflow-y-auto px-6 pb-6">
             {mostSoldProducts.map((product) => (
-              <MostSoldProductsItem key={product.productId} product={product} />
+              <MostSoldProductItem key={product.productId} product={product} />
             ))}
           </div>
         </div>

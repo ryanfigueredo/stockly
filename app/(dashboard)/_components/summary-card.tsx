@@ -1,3 +1,4 @@
+import { Skeleton } from "@/app/_components/ui/skeleton";
 import { ReactNode } from "react";
 
 export const SummaryCardIcon = ({ children }: { children: ReactNode }) => {
@@ -20,4 +21,14 @@ export const SummaryCard = ({ children }: { children: ReactNode }) => {
   return <div className="rounded-xl bg-white p-6">{children}</div>;
 };
 
-export default SummaryCard;
+export const SummaryCardSkeleton = () => {
+  return (
+    <Skeleton className="bg-white bg-opacity-75 p-6">
+      <div className="space-y-2">
+        <Skeleton className="h-9 w-9" />
+        <Skeleton className="h-20 w-[86.26px]" />
+        <Skeleton className="h-8 w-48" />
+      </div>
+    </Skeleton>
+  );
+};

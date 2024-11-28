@@ -1,5 +1,6 @@
 import { getTotalRevenue } from "@/app/_data-acess/dashboard/get-total-revenue";
-import SummaryCard, {
+import {
+  SummaryCard,
   SummaryCardIcon,
   SummaryCardTitle,
   SummaryCardValue,
