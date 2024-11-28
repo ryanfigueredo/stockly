@@ -73,7 +73,6 @@ const ProductTableDropdownMenu = ({
             stock: product.stock,
           }}
           setDialogIsOpen={setEditDialogIsOpen}
-          onSucess={() => setEditDialogOpen(false)}
         />
         <DeleteProductDialogContent productId={product.id} />
       </Dialog>
