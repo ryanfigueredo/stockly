@@ -1,11 +1,11 @@
 import { db } from "@/app/_lib/prisma";
-import { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function GET(
-  request: NextRequest,
+  request: Request,
   { params }: { params: { id: string } },
 ) {
-  const searchParams = request.nextUrl.searchParams;
+  const searchParams = new URL(request.url).searchParams;
   const query = searchParams.get("teste");
   console.log({ query });
   const prouctId = params.id;
