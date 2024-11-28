@@ -7,7 +7,7 @@ import {
   ChartTooltipContent,
 } from "@/app/_components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-import { DayTotalRevenue } from "@/app/_data-access/dashboard/getDashboard";
+import { DayTotalRevenueDto } from "@/app/_data-access/dashboard/getDashboard";
 
 const chartConfig = {
   totalRevenue: {
@@ -16,7 +16,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 interface RevenueChartProps {
-  data: DayTotalRevenue[];
+  data: DayTotalRevenueDto[];
 }
 
 const RevenueChart = ({ data }: RevenueChartProps) => {
