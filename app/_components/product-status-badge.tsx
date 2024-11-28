@@ -1,4 +1,4 @@
-import { ProductStatusDto } from "../_data-access/product/get-products";
+import { ProductStatusDto } from "@/app/_data-acess/product/get-products";
 import { Badge } from "./ui/badge";
 
 const getStatusLabel = (status: string) => {

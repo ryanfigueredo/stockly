@@ -28,17 +28,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/app/_components/ui/table";
-import { formatCurrency } from "../../_helper/currency";
+import { formatCurrency } from "@/app/_helper/currency";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, PlusIcon } from "lucide-react";
-import {
-  Dispatch,
-  SetStateAction,
-  use,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import UpsertSaleTableDropdownMenu from "./upsert-table-dropdown-menu";
@@ -94,7 +87,6 @@ const UpsertSheetContent = ({
       setSheetIsOpen(false);
     },
   });
-
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -102,17 +94,15 @@ const UpsertSheetContent = ({
       quantity: 1,
     },
   });
-
   useEffect(() => {
     if (!isOpen) {
       form.reset();
       setSelectedProducts([]);
     }
-  }, [isOpen, form]);
+  }, [form, isOpen]);
   useEffect(() => {
     setSelectedProducts(defaultSelectedProducts ?? []);
   }, [defaultSelectedProducts]);
-
   const onSubmit = (data: FormSchema) => {
     const selectedProduct = products.find(
       (product) => product.id === data.productId,

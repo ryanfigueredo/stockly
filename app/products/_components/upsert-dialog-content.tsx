@@ -2,8 +2,8 @@
 
 import { upsertProduct } from "@/app/_actions/product/upsert-product";
 import {
-  UpsertProductSchema,
   upsertProductSchema,
+  UpsertProductSchema,
 } from "@/app/_actions/product/upsert-product/schema";
 import { Button } from "@/app/_components/ui/button";
 import {
@@ -24,7 +24,6 @@ import {
 } from "@/app/_components/ui/form";
 import { Input } from "@/app/_components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { on } from "events";
 import { Loader2Icon } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { Dispatch, SetStateAction } from "react";
@@ -43,35 +42,36 @@ const UpsertProductDialogContent = ({
 }: UpsertProductDialogContentProps) => {
   const { execute: executeUpsertProduct } = useAction(upsertProduct, {
     onSuccess: () => {
-      toast.success("Produto salvo com sucesso");
+      toast.success("Produto salvo com sucesso.");
       setDialogIsOpen(false);
     },
     onError: () => {
-      toast.error("Ocorreu um erro ao salvar o produto");
+      toast.error("Ocorreu um erro ao salvar o produto.");
     },
   });
   const form = useForm<UpsertProductSchema>({
     shouldUnregister: true,
     resolver: zodResolver(upsertProductSchema),
     defaultValues: defaultValues ?? {
+      id: "",
       name: "",
       price: 0,
       stock: 1,
     },
   });
 
-  const isEditing = !!defaultValues;
-
   const onSubmit = (data: UpsertProductSchema) => {
     executeUpsertProduct({ ...data, id: defaultValues?.id });
   };
+
+  const isEditing = !!defaultValues;
 
   return (
     <DialogContent>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <DialogHeader>
-            <DialogTitle>{isEditing ? "Editar " : "Criar "}produto</DialogTitle>
+            <DialogTitle>{isEditing ? "Editar" : "Criar"} produto</DialogTitle>
             <DialogDescription>Insira as informações abaixo</DialogDescription>
           </DialogHeader>
 
@@ -80,7 +80,7 @@ const UpsertProductDialogContent = ({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nome do produto</FormLabel>
+                <FormLabel>Nome</FormLabel>
                 <FormControl>
                   <Input placeholder="Digite o nome do produto" {...field} />
                 </FormControl>
@@ -88,13 +88,12 @@ const UpsertProductDialogContent = ({
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="price"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Preço do produto</FormLabel>
+                <FormLabel>Preço</FormLabel>
                 <FormControl>
                   <NumericFormat
                     thousandSeparator="."
@@ -115,7 +114,6 @@ const UpsertProductDialogContent = ({
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="stock"
@@ -146,7 +144,7 @@ const UpsertProductDialogContent = ({
               className="gap-1.5"
             >
               {form.formState.isSubmitting && (
-                <Loader2Icon className="animate-spin" size={18} />
+                <Loader2Icon className="animate-spin" size={16} />
               )}
               Salvar
             </Button>

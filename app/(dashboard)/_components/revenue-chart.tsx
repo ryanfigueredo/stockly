@@ -7,7 +7,7 @@ import {
   ChartTooltipContent,
 } from "@/app/_components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-import { DayTotalRevenueDto } from "@/app/_data-access/dashboard/getDashboard";
+import { DayTotalRevenueDto } from "@/app/_data-acess/dashboard/get-last-14-days-revenue";
 
 const chartConfig = {
   totalRevenue: {
